@@ -1,0 +1,84 @@
+{% load static %}
+<style>
+    .user-logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff; /* Set the color of the logo */
+    background-color: #007bff; /* Set the background color of the logo */
+    width: 30px; /* Set the width of the logo */
+    height: 30px; /* Set the height of the logo */
+    border-radius: 50%; /* Make the logo circular */
+    display: flex;
+    margin-left: -8px;
+    line-height: 30px;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropdown-center{
+    position: relative;
+    left: -50px;
+
+}
+
+.btn-light{
+    font-size: 1rem;
+    color: black;
+    border-radius: 40px;
+    background-color: aliceblue;
+}
+
+
+
+
+</style>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="{% static 'logo.avif' %}" style="width: 3em; height: 2em;" alt="logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav  mx-auto  mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link " aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/movies">Movies</a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'add_movie'%}">Add Movie</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Categories
+            </a>
+            <ul class="dropdown-menu">
+            
+            {% for category in categories %}
+              <li><a class="dropdown-item" href="{% url 'category_movies' category.0 %}">{{ category.1 }}</a></li>
+              {% endfor %}
+            </ul>
+        </ul>
+    </li>
+    {% endif %}
+          {% if user.is_authenticated %}
+          <div class="dropdown-center">
+            <a class="btn btn-light " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="user-logo" style="display: inline-block;">{{ user.username|first|upper }}</div> <span>{{ user.username|upper }}</span> 
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+              <li><a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a></li>
+              <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+          </div>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>

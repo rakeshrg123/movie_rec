@@ -1,0 +1,206 @@
+{% extends 'layout/main.html' %}
+
+{% block style %}
+<style>
+    .container1 {
+        position: relative;
+        font-size: 16px;
+        width: 90vw;
+        max-width: 40rem;
+        padding: 3em 1.8em;
+        border-radius: 6px;
+        background-color: #201f28;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: 1.3em 2em 3em rgba(0, 0, 0, 0.2);
+        margin-bottom: 30px;
+    }
+
+    #result {
+        color: #ffffff;
+    }
+
+    .info {
+        position: relative;
+        display: grid;
+        grid-template-columns: 4fr 8fr;
+        align-items: center;
+        margin-top: 1.2em;
+    }
+
+    .poster {
+        width: 100%;
+    }
+
+    h2 {
+
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+
+    }
+
+    .rating {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 0.6em;
+margin: 0.6em 0 0.9em 0;}
+
+.rating img {
+width: 1.2em;}
+
+.rating h4 {
+display: inline-block;
+font-size: 1.1em;
+font-weight: 500;
+}
+
+.details{
+    display: flex;
+    font-size: 0.95em;
+    gap: 1em;
+    justify-content: center;
+    color: #a0a0a0;
+    margin: 0.6em 0;
+    font-weight: 300;
+}
+
+.genre{
+    display: flex;
+    justify-content: space-around;
+}
+
+.genre div{
+    border:  1px solid #a0a0a0;
+    font-size: 0.75em;
+    padding: 0.4em 1.6em;
+    border-radius: 0.4em;
+    font-weight: 300;
+}
+
+h3{
+    color: #ffffff;
+    font-weight: 500;
+    margin-top: 1.2em;
+}
+
+p {
+    font-size: 0.9em;
+    font-weight: 300;
+    line-height: 1.8em;
+    text-align: justify;
+    color: #a0a0a0;
+    
+    }
+    .btn{
+        margin-top: 8px;
+        font-size: 1rem;
+    color: black;
+    border-radius: 40px;
+    background-color: aliceblue;
+
+    }
+
+    .row{
+        position: absolute;
+        right: 30px;
+        top: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="container1">
+    <div id="result">
+        <div class="info">
+            <img src="{{ movie.poster.url }}" class="poster">
+            <div>
+                <h2>{{ movie.title }}</h2>
+                {% if average_rating %}
+                <div class="rating">
+                    <img src="{% static 'star-icon.png' %}">
+                    <h4 style="margin-top: 8px;">{{ average_rating }}</h4>
+                </div>
+                {% endif %}
+                <div class="details">
+                    <span>Release: {{ movie.release_date }}</span>
+                </div>
+                <div class="genre">
+                    <div>{{ movie.category }}</div>
+                </div>
+            </div>
+        </div>
+        <h3>Plot:</h3>
+        <p>{{ movie.description }}</p>
+        <h3>Cast:</h3>
+        <p>{{ movie.actors }}</p>
+        <a href="{{ movie.trailer_link }}" class="btn btn-danger" style="margin-bottom: -25px;">Trailer</a>
+
+        <!-- Add Buttons -->
+        <div class="row mt-3">
+            {% if user.is_authenticated %}
+                {% if user == movie.added_by or user.is_superuser %}
+                    <button class="navbar-toggler bg-dark" data-bs-theme="dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+                        <div class="col">
+                            <a href="{% url 'edit_movie' movie.id %}" class="btn btn-primary btn-block" style="width: 100%; margin-bottom: 10px;">Edit</a>
+                        </div>
+                        <div class="col">
+                            <a type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" style="width: 100%; margin-bottom: 10px;">Delete</a>
+                        </div>
+                        <div class="col">
+                            <a href="{% url 'add_comments' movie.id %}" class="btn btn-info btn-block" style="width: 100%; margin-bottom: 10px;">Comment</a>
+                        </div>
+                        <div class="col">
+                            <a href="{% url 'rate_movie' movie.id %}" class="btn btn-success btn-block" style="width: 100%; margin-bottom: 10px;">Rate</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col">
+                        <a href="{% url 'add_comments' movie.id %}" class="btn btn-info btn-block" style="width: 100%; margin-bottom: 10px;">Comment</a>
+                    </div>
+                    <div class="col">
+                        <a href="{% url 'rate_movie' movie.id %}" class="btn btn-success btn-block" style="width: 100%; margin-bottom: 10px;">Rate</a>
+                    </div>
+                {% endif %}
+            {% else %}
+                <!-- If user is not authenticated, show only the Comment and Rate buttons -->
+                <div class="col">
+                    <a href="{% url 'add_comments' movie.id %}" class="btn btn-info btn-block" style="width: 100%; margin-bottom: 10px;">Comment</a>
+                </div>
+                <div class="col">
+                    <a href="{% url 'rate_movie' movie.id %}" class="btn btn-success btn-block" style="width: 100%; margin-bottom: 10px;">Rate</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete this movie?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <form action="{% url 'delete_movie' movie.id %}" method="post">
+            {% csrf_token %}
+           <button type="submit" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

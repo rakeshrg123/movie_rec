@@ -1,0 +1,71 @@
+{% extends 'layout/main.html' %}
+
+{% block style %}
+<style>
+    .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .user-profile {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .user-logo1 {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background-color: #65d0d7;
+        margin: 0 auto 20px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 36px;
+        color: #333;
+    }
+
+    .username {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    /* Additional user details */
+    .user-details {
+        margin-bottom: 20px;
+    }
+
+    .user-details p {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="user-profile">
+        <div class="user-logo1">{{ user.username|first|upper }}</div>
+        <p class="username">{{ user.username|upper }}</p>
+    </div>
+    
+    <!-- Additional user details -->
+    <div class="user-details">
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>First Name:</strong> {{ user.first_name }}</p>
+        <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+    </div>
+    
+    <div class="btn-group">
+        <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+    </div>
+</div>
+{% endblock %}
+

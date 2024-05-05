@@ -1,0 +1,103 @@
+<!-- comments.html -->
+{% extends 'layout/main.html' %}
+
+{% block style %}
+<style>
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+    }
+
+    .title {
+        margin-top: 0;
+        font-size: 24px;
+        color: #333;
+    }
+
+    .description {
+        margin-bottom: 20px;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #666;
+    }
+
+    .section-title {
+        margin-top: 20px;
+        font-size: 20px;
+        color: #333;
+    }
+
+    .comments-list {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 10px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .comment-item {
+        background-color: #fff;
+        border-radius: 6px;
+        padding: 10px 20px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .comment-form {
+        margin-top: 20px;
+    }
+
+
+
+    .btn-secondary {
+        float: right;
+        margin-top: -37px;
+        font-size: 1rem;
+    color: black;
+    border-radius: 40px;
+    background-color: aliceblue;
+    }
+
+    .btn-primary{
+        font-size: 1rem;
+    color: black;
+    border-radius: 40px;
+    background-color: aliceblue;
+
+    }
+
+ 
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="title">Movie : {{ movie.title }}</h2>
+    
+    <h3 class="section-title">Comments:</h3>
+    <ul class="comments-list">
+        {% for comment in comments %}
+        <li class="comment-item">
+            <div class="comment-user"> Comment by : {{ comment.user }}</div>
+            <div class="comment-text">{{ comment.text }}</div>
+            <div class="comment-text">{{ comment.created_at|timesince }} ago</div>
+        </li>
+        {% endfor %}
+    </ul>
+    
+    <h3 class="section-title">Add Comment:</h3>
+    <form method="post" class="comment-form">
+        {% csrf_token %}
+        <textarea name="text" id="" cols="50" class="form-control" placeholder="Add Your Reviews..."></textarea>
+        <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Submit</button>
+    </form>
+    
+    <!-- Back Button -->
+    <a href="{% url 'movie_details' movie.id %}" class="btn btn-secondary">Back</a>
+</div>
+{% endblock %}

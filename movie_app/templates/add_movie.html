@@ -1,0 +1,93 @@
+{% extends 'layout/main.html' %}
+
+{% block style %}
+<style>
+
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.1);
+    }
+    .form-group label {
+        font-weight: bold;
+    }
+
+    footer {
+        background-color: #333;
+        color: #fff;
+        padding: 10px 0;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Add New Movie</h2>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control {% if form.title.errors %}is-invalid{% endif %}" id="title" name="title" >
+            {% for error in form.title.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="poster">Poster</label>
+            <input type="file" class="form-control-file {% if form.poster.errors %}is-invalid{% endif %}" id="poster" name="poster" >
+            {% for error in form.poster.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control {% if form.description.errors %}is-invalid{% endif %}" id="description" name="description" rows="3" ></textarea>
+            {% for error in form.description.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="release_date">Release Date</label>
+            <input type="date" class="form-control {% if form.release_date.errors %}is-invalid{% endif %}" id="release_date" name="release_date" >
+            {% for error in form.release_date.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="actors">Actors</label>
+            <textarea class="form-control {% if form.actors.errors %}is-invalid{% endif %}" id="actors" name="actors" rows="3" ></textarea>
+            {% for error in form.actors.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select class="form-control {% if form.category.errors %}is-invalid{% endif %}" id="category" name="category">
+                <option value="" selected disabled>Select Category</option>
+                {% for category in categoriess %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            {% if form.category.errors %}
+                <div class="invalid-feedback">{{ form.category.errors.0 }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="trailer_link">YouTube Trailer Link</label>
+            <input type="url" class="form-control {% if form.trailer_link.errors %}is-invalid{% endif %}" id="trailer_link" name="trailer_link" >
+            {% for error in form.trailer_link.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Add Movie</button>
+    </form>
+</div>
+{% endblock %}

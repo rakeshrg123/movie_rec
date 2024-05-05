@@ -1,0 +1,115 @@
+{% extends 'layout/main.html' %}
+
+{% block style %}
+<style>
+    .card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+        margin-bottom: 20px;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-body {
+        text-align: center;
+    }
+
+    .card-title {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .rating {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
+
+    .rating img {
+        width: 1.2em;
+    }
+
+    .genre {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .card-img-top{
+        height: 270px;
+    }
+
+    .genre div {
+        border: 1px solid #a0a0a0;
+        font-size: 0.75em;
+        padding: 0.4em 1.6em;
+        border-radius: 0.4em;
+        font-weight: 300;
+    }
+
+    .form {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 10px;
+        max-width: 50%;
+    }
+
+    .btn-primary{
+        margin-top: 8px;
+        font-size: 1rem;
+    color: black;
+    border-radius: 40px;
+    background-color: aliceblue;
+
+    }
+
+    .btn-view1{
+        width: 120px;
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<!-- Search Form -->
+<form action="{% url 'search_movies' %}" class="form" method="GET">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Search movies..." name="q">
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </div>
+</form>
+<div class="container">
+
+    <div class="row" style="margin-left: 85px;">
+        {% if movies %}
+        {% for movie, rating in movie_ratings.items %}
+        <div class="col-md-4">
+            <div class="card" style="width: 18rem;">
+                <img src="{{ movie.poster.url }}" class="card-img-top" alt="Movie Poster">
+                <div class="card-body">
+                    <h5 class="card-title">{{ movie.title }}</h5>
+                    <div class="rating" style="margin-top: -8px;">
+                        <img src="{% static 'star-icon.png' %}">
+                        <h4 style="margin-top: 8px;">{{ rating }}</h4>
+                    </div>
+                    <div class="genre" style="margin-top: -10px;">
+                        <div>{{ movie.category }}</div>
+                    </div>
+                    <a href="/movie_details/{{ movie.id }}/" class="btn btn-primary btn-view1">View</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No movies found.</p>
+        <a href="{% url 'movies' %}" class="btn btn-primary btn-view1">Back</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
